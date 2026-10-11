@@ -214,19 +214,19 @@ const DENSITY_PRESETS = [
     id: 'compact',
     label: 'Compact',
     hint: 'Fit 1-Page',
-    values: { fontSize: '12px', lineHeight: '1.35', pagePadding: '20px', sectionSpacing: '12px' },
+    values: { fontSize: '10px', lineHeight: '1.35', pagePadding: '18px', sectionSpacing: '10px' },
   },
   {
     id: 'balanced',
     label: 'Balanced',
     hint: 'Standard ATS',
-    values: { fontSize: '13px', lineHeight: '1.45', pagePadding: '24px', sectionSpacing: '14px' },
+    values: { fontSize: '11px', lineHeight: '1.4', pagePadding: '20px', sectionSpacing: '12px' },
   },
   {
     id: 'spacious',
     label: 'Spacious',
     hint: 'Roomy',
-    values: { fontSize: '14px', lineHeight: '1.55', pagePadding: '32px', sectionSpacing: '20px' },
+    values: { fontSize: '12px', lineHeight: '1.45', pagePadding: '24px', sectionSpacing: '14px' },
   },
 ];
 
@@ -619,10 +619,10 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
     headerColor: '#0f172a',
     paperBg: '#ffffff',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontSize: '13px',
-    lineHeight: '1.45',
-    pagePadding: '24px',
-    sectionSpacing: '14px',
+    fontSize: '11px',
+    lineHeight: '1.4',
+    pagePadding: '20px',
+    sectionSpacing: '12px',
     dividerStyle: 'solid',
     dividerThickness: '1.5px',
     layout: 'single', // 'single', 'modern'
@@ -1009,11 +1009,12 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                           onChange={(e) => setStyles((s) => ({ ...s, fontSize: e.target.value }))}
                           className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
                         >
-                          <option value="12px">Compact (12px)</option>
+                          <option value="9.5px">Extra Fine (9.5px)</option>
+                          <option value="10px">Compact (10px)</option>
+                          <option value="11px">Balanced (11px)</option>
+                          <option value="12px">Standard (12px)</option>
                           <option value="13px">Medium (13px)</option>
-                          <option value="14px">Standard (14px)</option>
-                          <option value="15px">Large (15px)</option>
-                          <option value="16px">Spacious (16px)</option>
+                          <option value="14px">Large (14px)</option>
                         </select>
                       </div>
 
@@ -1630,14 +1631,14 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
               }}
             >
               {/* Header / Personal Details */}
-              <header className="mb-4">
+              <header className="mb-3">
                 <h1
                   className="font-black tracking-tight"
                   style={{
                     color: styles.headerColor,
-                    fontSize: '22px',
+                    fontSize: '16px',
                     lineHeight: '1.2',
-                    marginBottom: '3px',
+                    marginBottom: '2px',
                   }}
                   contentEditable
                   suppressContentEditableWarning
@@ -1650,8 +1651,8 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                   className="font-bold tracking-wide"
                   style={{
                     color: styles.themeColor,
-                    fontSize: '13px',
-                    marginBottom: '6px',
+                    fontSize: '11px',
+                    marginBottom: '4px',
                   }}
                   contentEditable
                   suppressContentEditableWarning
@@ -1662,7 +1663,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
 
                 {/* Contact Links */}
                 <div
-                  className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]"
+                  className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[9.5px]"
                   style={{ opacity: 0.85 }}
                 >
                   {data.personal.email && <span>{data.personal.email}</span>}
@@ -1690,7 +1691,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
               {data.summary && (
                 <section style={{ marginBottom: styles.sectionSpacing }}>
                   <h2
-                    className="font-bold uppercase tracking-wider text-xs mb-2 flex items-center gap-2"
+                    className="font-bold uppercase tracking-wider text-[10px] mb-1.5 flex items-center gap-2"
                     style={{ color: styles.themeColor }}
                   >
                     <span>Summary</span>
@@ -1726,13 +1727,13 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
               {/* Work Experience */}
               <section style={{ marginBottom: styles.sectionSpacing }}>
                 <h2
-                  className="font-bold uppercase tracking-wider text-xs mb-3 flex items-center gap-2"
+                  className="font-bold uppercase tracking-wider text-[10px] mb-2 flex items-center gap-2"
                   style={{ color: styles.themeColor }}
                 >
                   <span>Experience</span>
                 </h2>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {data.experience.map((exp) => (
                     <div key={exp.id}>
                       <div className="flex items-baseline justify-between mb-0.5">
@@ -1740,7 +1741,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                           className="font-bold"
                           style={{
                             color: styles.headerColor,
-                            fontSize: `calc(${styles.fontSize} + 2px)`,
+                            fontSize: `calc(${styles.fontSize} + 1px)`,
                           }}
                         >
                           {exp.role}
@@ -1757,10 +1758,10 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                       </div>
 
                       <div
-                        className="flex items-center justify-between mb-2 font-semibold"
+                        className="flex items-center justify-between mb-1.5 font-semibold"
                         style={{
                           color: styles.themeColor,
-                          fontSize: `calc(${styles.fontSize} - 1px)`,
+                          fontSize: `calc(${styles.fontSize} - 0.5px)`,
                         }}
                       >
                         <span>{exp.company}</span>
@@ -1768,7 +1769,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                       </div>
 
                       <ul
-                        className="list-disc pl-4 space-y-1.5"
+                        className="list-disc pl-3.5 space-y-1"
                         style={{
                           fontSize: styles.fontSize,
                           lineHeight: styles.lineHeight,
@@ -1801,16 +1802,16 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
               {/* Skills Section */}
               <section style={{ marginBottom: styles.sectionSpacing }}>
                 <h2
-                  className="font-bold uppercase tracking-wider text-xs mb-2.5 flex items-center gap-2"
+                  className="font-bold uppercase tracking-wider text-[10px] mb-2 flex items-center gap-2"
                   style={{ color: styles.themeColor }}
                 >
                   <span>Skills & Core Competencies</span>
                 </h2>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {data.skills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="px-2.5 py-1 rounded font-semibold transition-colors"
+                      className="px-2 py-0.5 rounded font-semibold transition-colors"
                       style={{
                         backgroundColor: `${styles.themeColor}15`,
                         color: styles.themeColor,
@@ -1840,12 +1841,12 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
               {/* Education Section */}
               <section>
                 <h2
-                  className="font-bold uppercase tracking-wider text-xs mb-2.5 flex items-center gap-2"
+                  className="font-bold uppercase tracking-wider text-[10px] mb-2 flex items-center gap-2"
                   style={{ color: styles.themeColor }}
                 >
                   <span>Education</span>
                 </h2>
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {data.education.map((edu) => (
                     <div key={edu.id}>
                       <div className="flex items-baseline justify-between">
@@ -1872,7 +1873,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                         className="flex items-center justify-between"
                         style={{
                           opacity: 0.85,
-                          fontSize: `calc(${styles.fontSize} - 1px)`,
+                          fontSize: `calc(${styles.fontSize} - 0.5px)`,
                           lineHeight: styles.lineHeight,
                         }}
                       >
