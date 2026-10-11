@@ -46,159 +46,147 @@ export const FeatureShowcase = () => {
     {
       title: 'ATS Parsability',
       icon: FileText,
-      desc: 'Checks PDF/DOCX structure, columns, and contact headers for major ATS platforms.',
+      desc: 'Validates file format, columns, and contact headers.',
     },
     {
       title: 'Impact & Brevity',
       icon: PenTool,
-      desc: 'Evaluates action verbs, quantifiable metrics (XYZ formula), and cuts filler words.',
+      desc: 'Checks active verbs and quantifiable impact metrics.',
     },
     {
-      title: 'Keyword Alignment',
+      title: 'Keyword Match',
       icon: Target,
-      desc: 'Benchmarks technical and soft skills against target job descriptions.',
+      desc: 'Benchmarks skills against target job descriptions.',
     },
     {
-      title: 'Red Flag Detection',
+      title: 'Red Flags',
       icon: Flag,
-      desc: 'Flags employment gaps, formatting errors, and unverified claims.',
+      desc: 'Detects date gaps, formatting errors, and typos.',
     },
   ];
 
   return (
-    <div className="space-y-16 pt-4 pb-12">
-      {/* 1. Diagnostic Highlights (Explaining the hero preview graphic) */}
-      <div className="border-y border-surface-border py-8">
-        <div className="max-w-4xl mx-auto text-center space-y-2 mb-6">
-          <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">
-            Automated Audit
-          </span>
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+    <div className="space-y-14 pt-4 pb-12">
+      {/* 1. Diagnostic Highlights */}
+      <div className="border-y border-surface-border py-7">
+        <div className="max-w-4xl mx-auto text-center space-y-1.5 mb-5">
+          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             How OK-CV Grades Your Resume
-          </h2>
+          </h3>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
             Simulates commercial ATS platforms and recruiter review in seconds.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-4xl mx-auto">
-          <div className="bg-surface/80 border border-surface-border rounded-2xl p-4 flex items-start gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
+          <div className="bg-surface/80 border border-surface-border rounded-2xl p-3.5 flex items-center gap-3">
             <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 shrink-0">
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
               <p className="text-xs font-bold text-white">ATS Score (0–100)</p>
-              <p className="text-xs text-slate-400 mt-1">
-                Overall score benchmarked across key ATS evaluation criteria.
+              <p className="text-xs text-slate-400 mt-0.5">
+                Overall score benchmarked across key ATS criteria.
               </p>
             </div>
           </div>
 
-          <div className="bg-surface/80 border border-surface-border rounded-2xl p-4 flex items-start gap-3">
+          <div className="bg-surface/80 border border-surface-border rounded-2xl p-3.5 flex items-center gap-3">
             <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400 shrink-0">
               <AlertTriangle className="w-4 h-4" />
             </div>
             <div>
               <p className="text-xs font-bold text-white">Passed vs. Flagged</p>
-              <p className="text-xs text-slate-400 mt-1">
-                Pinpoints exact bullet points that need stronger metrics or rewrites.
+              <p className="text-xs text-slate-400 mt-0.5">
+                Pinpoints bullets needing stronger metrics.
               </p>
             </div>
           </div>
 
-          <div className="bg-surface/80 border border-surface-border rounded-2xl p-4 flex items-start gap-3">
+          <div className="bg-surface/80 border border-surface-border rounded-2xl p-3.5 flex items-center gap-3">
             <div className="p-2 rounded-xl bg-cyan-500/15 text-cyan-400 shrink-0">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
               <p className="text-xs font-bold text-white">Parse Rate & Layout</p>
-              <p className="text-xs text-slate-400 mt-1">
-                Ensures compatibility with Greenhouse, Lever, and Workday.
+              <p className="text-xs text-slate-400 mt-0.5">
+                Ensures Greenhouse, Lever, and Workday compatibility.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Dual-Engine Evaluation (Simplified, clean presentation) */}
+      {/* 2. Dual-Engine Evaluation */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
         <div className="lg:col-span-5 flex justify-center">
           <div className="rounded-3xl border border-surface-border bg-surface/40 p-4 shadow-xl">
             <img
               src="/images/ats-checker.svg"
               alt="Two-Tier Evaluation"
-              className="w-full max-w-[360px] h-auto object-contain select-none"
+              className="w-full max-w-[340px] h-auto object-contain select-none"
             />
           </div>
         </div>
 
         <div className="lg:col-span-7 space-y-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">
-              Dual-Layer System
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">
-              Scored for Both ATS Bots and Recruiters
+            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Scored for Both ATS and Recruiters
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 mt-1">
-              Most resumes are screened twice: first by parsing software, then by hiring managers.
+              Screened for automated parsing software and human hiring managers.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="bg-surface/90 border border-surface-border rounded-2xl p-4">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">
+              <div className="flex items-center gap-2.5 mb-1.5">
+                <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center shrink-0">
                   1
                 </span>
                 <h4 className="text-sm font-bold text-white">Machine Parsability</h4>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Tests that skills, job titles, and dates extract cleanly without formatting bugs.
+                Extracts skills, job titles, and dates without layout errors.
               </p>
             </div>
 
             <div className="bg-surface/90 border border-surface-border rounded-2xl p-4">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center">
+              <div className="flex items-center gap-2.5 mb-1.5">
+                <span className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center shrink-0">
                   2
                 </span>
                 <h4 className="text-sm font-bold text-white">Recruiter Impact</h4>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Scores measurable impact, active verbs, and flags filler buzzwords.
+                Scores measurable impact, active verbs, and flags buzzwords.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3. Core Audit Pillars (Replaces the former 27 heavy bullet lists with 4 clean cards) */}
+      {/* 3. Core Audit Pillars */}
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-6">
-          <span className="text-xs font-bold uppercase tracking-widest text-teal-400">
-            Evaluation Pillars
-          </span>
-          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
-            What We Check
-          </h3>
-          <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
-            Key areas audited across your entire resume.
-          </p>
-        </div>
+        <h3 className="text-xl sm:text-2xl font-black text-white text-center tracking-tight mb-5">
+          What We Check
+        </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {auditHighlights.map((item, idx) => {
             const Icon = item.icon;
             return (
               <div
                 key={idx}
-                className="bg-surface/90 border border-surface-border rounded-2xl p-4.5 space-y-2 hover:border-emerald-500/40 transition-colors"
+                className="bg-surface/90 border border-surface-border rounded-2xl p-4 hover:border-emerald-500/40 transition-colors flex flex-col justify-start"
               >
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/25">
-                  <Icon className="w-4 h-4" />
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/25 shrink-0">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-sm font-bold text-white tracking-tight">{item.title}</h4>
                 </div>
-                <h4 className="text-sm font-bold text-white">{item.title}</h4>
                 <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
               </div>
             );
@@ -206,18 +194,15 @@ export const FeatureShowcase = () => {
         </div>
       </div>
 
-      {/* 4. Video Demos (Clean & Compact) */}
+      {/* 4. Video Demos */}
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-5">
-          <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
-            Preview Walkthroughs
-          </span>
-          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
+          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             See OK-CV in Action
           </h3>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-5">
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
           {videos.map((vid) => {
             const Icon = vid.icon;
             const isActive = activeVideoTab === vid.id;

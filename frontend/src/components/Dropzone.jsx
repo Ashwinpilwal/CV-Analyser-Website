@@ -301,29 +301,26 @@ export const Dropzone = ({ onAnalyze, isAnalyzing }) => {
               <div className="pt-2 border-t border-surface-border/60">
                 <div
                   onClick={() => setShowJobDescription(!showJobDescription)}
-                  className="flex items-center justify-between w-full py-2.5 px-3 rounded-2xl bg-canvas-subtle hover:bg-surface-elevated border border-surface-border transition-all cursor-pointer select-none"
+                  className="flex items-center justify-between w-full px-3.5 py-2.5 rounded-2xl bg-canvas-subtle hover:bg-surface-elevated border border-surface-border transition-all cursor-pointer select-none"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="p-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
                       <Briefcase className="w-4 h-4" />
                     </div>
-                    <div className="text-left">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-bold text-white">Compare with Job Description (JD)</span>
-                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                          Optional
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-400">
-                        Benchmark your CV keywords, skills, and scoring directly against specific job requirements
-                      </p>
-                    </div>
+                    <span className="text-xs sm:text-sm font-bold text-white truncate">
+                      Compare with Job Description
+                    </span>
+                    <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 shrink-0">
+                      Optional
+                    </span>
                   </div>
-                  {showJobDescription ? (
-                    <ChevronUp className="w-4 h-4 text-slate-400" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
-                  )}
+                  <div className="text-slate-400 shrink-0 ml-2">
+                    {showJobDescription ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </div>
                 </div>
 
                 {showJobDescription && (
