@@ -222,6 +222,27 @@ const FONT_OPTIONS = [
   { name: 'JetBrains Mono (Technical)', value: "'JetBrains Mono', monospace" },
 ];
 
+const DENSITY_PRESETS = [
+  {
+    id: 'compact',
+    label: 'Compact',
+    hint: 'Fit 1-Page',
+    values: { fontSize: '12px', lineHeight: '1.35', pagePadding: '20px', sectionSpacing: '12px' },
+  },
+  {
+    id: 'balanced',
+    label: 'Balanced',
+    hint: 'Standard ATS',
+    values: { fontSize: '13px', lineHeight: '1.45', pagePadding: '24px', sectionSpacing: '14px' },
+  },
+  {
+    id: 'spacious',
+    label: 'Spacious',
+    hint: 'Roomy',
+    values: { fontSize: '14px', lineHeight: '1.55', pagePadding: '32px', sectionSpacing: '20px' },
+  },
+];
+
 /**
  * Parses raw CV text into structured sections for Live CV Studio
  */
@@ -561,7 +582,8 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
 
   const [activeTab, setActiveTab] = useState('style'); // 'style', 'content', 'ai_help'
   const [activeContentSection, setActiveContentSection] = useState('personal'); // 'personal', 'summary', 'experience', 'education', 'skills'
-  const [zoomLevel, setZoomLevel] = useState(100);
+  const [zoomLevel, setZoomLevel] = useState(70);
+  const [showAdvancedStyles, setShowAdvancedStyles] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -579,10 +601,10 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
     headerColor: '#0f172a',
     paperBg: '#ffffff',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontSize: '14px',
-    lineHeight: '1.5',
-    pagePadding: '32px',
-    sectionSpacing: '20px',
+    fontSize: '13px',
+    lineHeight: '1.45',
+    pagePadding: '24px',
+    sectionSpacing: '14px',
     dividerStyle: 'solid',
     dividerThickness: '1.5px',
     layout: 'single', // 'single', 'modern'
@@ -876,129 +898,198 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
 
               {/* Typography / Font Family */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                  Font Family
-                </label>
-                <div className="space-y-1.5">
-                  {FONT_OPTIONS.map((f) => (
-                    <button
-                      key={f.value}
-                      onClick={() => setStyles((s) => ({ ...s, fontFamily: f.value }))}
-                      className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between border ${
-                        styles.fontFamily === f.value
-                          ? 'bg-surface-elevated text-white border-cyan-500/50 shadow-sm'
-                          : 'bg-canvas-subtle/50 text-slate-300 border-surface-border hover:bg-surface-elevated'
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                    Font Family
+                  </label>
+                  <span className="text-[11px] text-cyan-400 font-medium">
+                    {FONT_OPTIONS.find((f) => f.value === styles.fontFamily)?.name.split(' (')[0] || 'Modern'}
+                  </span>
+                </div>
+                <div className="relative">
+                  <select
+                    value={styles.fontFamily}
+                    onChange={(e) => setStyles((s) => ({ ...s, fontFamily: e.target.value }))}
+                    className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-cyan-400 cursor-pointer shadow-sm appearance-none pr-9"
+                    style={{ fontFamily: styles.fontFamily }}
+                  >
+                    {FONT_OPTIONS.map((f) => (
+                      <option key={f.value} value={f.value} className="bg-slate-900 text-white py-2" style={{ fontFamily: f.value }}>
+                        {f.name}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Layout Density Quick Presets */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                    Layout Density
+                  </label>
+                  <span className="text-[11px] text-slate-400">1-Click Auto Format</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {DENSITY_PRESETS.map((preset) => {
+                    const isActive =
+                      styles.fontSize === preset.values.fontSize &&
+                      styles.lineHeight === preset.values.lineHeight &&
+                      styles.pagePadding === preset.values.pagePadding &&
+                      styles.sectionSpacing === preset.values.sectionSpacing;
+                    return (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => setStyles((s) => ({ ...s, ...preset.values }))}
+                        className={`flex flex-col items-center justify-center py-2.5 px-2 rounded-xl text-center border transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-slate-800 text-white border-cyan-500/60 shadow-sm ring-1 ring-cyan-500/30'
+                            : 'bg-canvas-subtle/50 text-slate-300 border-surface-border hover:bg-surface-elevated hover:text-white'
+                        }`}
+                      >
+                        <span className="text-xs font-bold">{preset.label}</span>
+                        <span className="text-[10px] text-slate-400 mt-0.5">{preset.hint}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Collapsible Fine-Tune Controls Accordion */}
+              <div className="border border-surface-border rounded-xl bg-canvas-subtle/30 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedStyles((prev) => !prev)}
+                  className="w-full px-3.5 py-2.5 flex items-center justify-between text-xs font-semibold text-slate-300 hover:text-white hover:bg-surface-elevated transition-colors cursor-pointer"
+                >
+                  <span className="flex items-center gap-2">
+                    <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Fine-Tune Margins, Spacing & Paper</span>
+                  </span>
+                  <div className="flex items-center gap-2 text-slate-400">
+                    <span className="text-[11px] font-normal">{showAdvancedStyles ? 'Collapse' : '6 options'}</span>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        showAdvancedStyles ? 'rotate-180' : ''
                       }`}
-                      style={{ fontFamily: f.value }}
-                    >
-                      <span>{f.name}</span>
-                      {styles.fontFamily === f.value && <Check className="w-4 h-4 text-cyan-400" />}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                    />
+                  </div>
+                </button>
 
-              {/* Font Size & Line Height */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Font Size
-                  </label>
-                  <select
-                    value={styles.fontSize}
-                    onChange={(e) => setStyles((s) => ({ ...s, fontSize: e.target.value }))}
-                    className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-400"
-                  >
-                    <option value="12px">Compact (12px)</option>
-                    <option value="13px">Medium (13px)</option>
-                    <option value="14px">Standard (14px)</option>
-                    <option value="15px">Large (15px)</option>
-                    <option value="16px">Spacious (16px)</option>
-                  </select>
-                </div>
+                {showAdvancedStyles && (
+                  <div className="p-3.5 pt-2 border-t border-surface-border/60 space-y-3.5 bg-surface/40 animate-fade-in">
+                    {/* Font Size & Line Spacing */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                          Font Size
+                        </label>
+                        <select
+                          value={styles.fontSize}
+                          onChange={(e) => setStyles((s) => ({ ...s, fontSize: e.target.value }))}
+                          className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        >
+                          <option value="12px">Compact (12px)</option>
+                          <option value="13px">Medium (13px)</option>
+                          <option value="14px">Standard (14px)</option>
+                          <option value="15px">Large (15px)</option>
+                          <option value="16px">Spacious (16px)</option>
+                        </select>
+                      </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Line Spacing
-                  </label>
-                  <select
-                    value={styles.lineHeight}
-                    onChange={(e) => setStyles((s) => ({ ...s, lineHeight: e.target.value }))}
-                    className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-400"
-                  >
-                    <option value="1.3">Tight (1.3)</option>
-                    <option value="1.5">Standard (1.5)</option>
-                    <option value="1.7">Relaxed (1.7)</option>
-                  </select>
-                </div>
-              </div>
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                          Line Spacing
+                        </label>
+                        <select
+                          value={styles.lineHeight}
+                          onChange={(e) => setStyles((s) => ({ ...s, lineHeight: e.target.value }))}
+                          className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        >
+                          <option value="1.3">Tight (1.3)</option>
+                          <option value="1.35">Compact (1.35)</option>
+                          <option value="1.45">Standard (1.45)</option>
+                          <option value="1.55">Relaxed (1.55)</option>
+                          <option value="1.7">Spacious (1.7)</option>
+                        </select>
+                      </div>
+                    </div>
 
-              {/* Margins, Padding & Section Spacing */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Page Margin
-                  </label>
-                  <select
-                    value={styles.pagePadding}
-                    onChange={(e) => setStyles((s) => ({ ...s, pagePadding: e.target.value }))}
-                    className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-400"
-                  >
-                    <option value="20px">Narrow (20px)</option>
-                    <option value="32px">Normal (32px)</option>
-                    <option value="44px">Wide (44px)</option>
-                  </select>
-                </div>
+                    {/* Margins, Padding & Section Spacing */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                          Page Margin
+                        </label>
+                        <select
+                          value={styles.pagePadding}
+                          onChange={(e) => setStyles((s) => ({ ...s, pagePadding: e.target.value }))}
+                          className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        >
+                          <option value="16px">Tight (16px)</option>
+                          <option value="20px">Narrow (20px)</option>
+                          <option value="24px">Normal (24px)</option>
+                          <option value="32px">Standard (32px)</option>
+                          <option value="44px">Wide (44px)</option>
+                        </select>
+                      </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Section Spacing
-                  </label>
-                  <select
-                    value={styles.sectionSpacing}
-                    onChange={(e) => setStyles((s) => ({ ...s, sectionSpacing: e.target.value }))}
-                    className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-400"
-                  >
-                    <option value="14px">Compact (14px)</option>
-                    <option value="20px">Standard (20px)</option>
-                    <option value="28px">Roomy (28px)</option>
-                  </select>
-                </div>
-              </div>
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                          Section Spacing
+                        </label>
+                        <select
+                          value={styles.sectionSpacing}
+                          onChange={(e) => setStyles((s) => ({ ...s, sectionSpacing: e.target.value }))}
+                          className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        >
+                          <option value="10px">Tight (10px)</option>
+                          <option value="12px">Compact (12px)</option>
+                          <option value="14px">Balanced (14px)</option>
+                          <option value="20px">Standard (20px)</option>
+                          <option value="28px">Roomy (28px)</option>
+                        </select>
+                      </div>
+                    </div>
 
-              {/* Divider Lines & Paper Background */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Divider Lines
-                  </label>
-                  <select
-                    value={styles.dividerStyle}
-                    onChange={(e) => setStyles((s) => ({ ...s, dividerStyle: e.target.value }))}
-                    className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-400"
-                  >
-                    <option value="solid">Solid Line</option>
-                    <option value="dashed">Dashed</option>
-                    <option value="dotted">Dotted</option>
-                    <option value="none">None</option>
-                  </select>
-                </div>
+                    {/* Divider Lines & Paper Background */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                          Divider Lines
+                        </label>
+                        <select
+                          value={styles.dividerStyle}
+                          onChange={(e) => setStyles((s) => ({ ...s, dividerStyle: e.target.value }))}
+                          className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        >
+                          <option value="solid">Solid Line</option>
+                          <option value="dashed">Dashed</option>
+                          <option value="dotted">Dotted</option>
+                          <option value="none">None</option>
+                        </select>
+                      </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Paper Background
-                  </label>
-                  <select
-                    value={styles.paperBg}
-                    onChange={(e) => setStyles((s) => ({ ...s, paperBg: e.target.value }))}
-                    className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-400"
-                  >
-                    <option value="#ffffff">Pure White</option>
-                    <option value="#fafafa">Soft Off-White</option>
-                    <option value="#fcfbf9">Warm Cream</option>
-                    <option value="#f8fafc">Cool Slate White</option>
-                  </select>
-                </div>
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                          Paper Background
+                        </label>
+                        <select
+                          value={styles.paperBg}
+                          onChange={(e) => setStyles((s) => ({ ...s, paperBg: e.target.value }))}
+                          className="w-full bg-canvas-subtle border border-surface-border rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        >
+                          <option value="#ffffff">Pure White</option>
+                          <option value="#fafafa">Soft Off-White</option>
+                          <option value="#fcfbf9">Warm Cream</option>
+                          <option value="#f8fafc">Cool Slate White</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -1423,57 +1514,88 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
         </div>
       )}
 
-      {/* RIGHT COLUMN: Real-Time Live Preview A4 Paper */}
+      {/* RIGHT COLUMN: Real-Time Live Preview */}
       <div className={`flex flex-col items-center ${isFullScreen ? 'w-full' : 'lg:col-span-6 xl:col-span-6 lg:sticky lg:top-24'}`}>
-        {isFullScreen && (
-          <div className="w-full max-w-4xl mb-4 p-3 bg-surface/90 border border-surface-border rounded-2xl flex items-center justify-between no-print shadow-md">
-            <span className="text-xs font-bold text-cyan-400 flex items-center gap-2">
-              <Eye className="w-4 h-4" />
-              <span>Full Screen Document Mode</span>
-            </span>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center bg-canvas-subtle rounded-xl border border-surface-border p-1 text-xs font-bold text-slate-300">
+        {/* CV Preview Top Control Bar (Always visible in both normal & fullscreen) */}
+        <div className={`w-full mb-3 flex flex-wrap items-center justify-between gap-2 px-3.5 py-2 bg-surface/90 backdrop-blur-md border border-surface-border rounded-xl text-xs shadow-sm no-print ${
+          isFullScreen ? 'max-w-4xl' : ''
+        }`}>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-400 font-medium text-[11px]">Zoom:</span>
+            <div className="flex items-center gap-1 bg-canvas-subtle p-0.5 rounded-lg border border-surface-border">
+              {[
+                { label: '50%', val: 50 },
+                { label: '70% Fit', val: 70 },
+                { label: '85%', val: 85 },
+                { label: '100%', val: 100 },
+              ].map((preset) => (
                 <button
-                  onClick={() => setZoomLevel((z) => Math.max(70, z - 10))}
-                  className="p-1 hover:text-white rounded"
-                  title="Zoom Out"
+                  key={preset.val}
+                  type="button"
+                  onClick={() => setZoomLevel(preset.val)}
+                  className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all cursor-pointer ${
+                    zoomLevel === preset.val
+                      ? 'bg-slate-700 text-white shadow-xs'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
                 >
-                  <ZoomOut className="w-4 h-4" />
+                  {preset.label}
                 </button>
-                <span className="px-2">{zoomLevel}%</span>
-                <button
-                  onClick={() => setZoomLevel((z) => Math.min(130, z + 10))}
-                  className="p-1 hover:text-white rounded"
-                  title="Zoom In"
-                >
-                  <ZoomIn className="w-4 h-4" />
-                </button>
-              </div>
-              <button
-                onClick={() => setIsFullScreen(false)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-surface-elevated hover:bg-surface-hover border border-surface-border text-xs font-bold text-white rounded-xl transition-all cursor-pointer"
-              >
-                <Minimize2 className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Exit Full Screen</span>
-              </button>
+              ))}
             </div>
           </div>
-        )}
+
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setZoomLevel((z) => Math.max(40, z - 10))}
+              className="p-1 text-slate-400 hover:text-white hover:bg-surface-elevated rounded transition-colors cursor-pointer"
+              title="Zoom Out"
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+            <span className="font-semibold text-slate-300 w-9 text-center text-xs">{zoomLevel}%</span>
+            <button
+              type="button"
+              onClick={() => setZoomLevel((z) => Math.min(130, z + 10))}
+              className="p-1 text-slate-400 hover:text-white hover:bg-surface-elevated rounded transition-colors cursor-pointer"
+              title="Zoom In"
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
+            {isFullScreen && (
+              <button
+                type="button"
+                onClick={() => setIsFullScreen(false)}
+                className="ml-2 flex items-center gap-1 px-2.5 py-1 bg-surface-elevated hover:bg-surface-hover border border-surface-border text-slate-200 rounded-lg text-xs cursor-pointer"
+              >
+                <Minimize2 className="w-3 h-3 text-cyan-400" />
+                <span>Exit Fullscreen</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Outer Container (Document Frame) */}
         <div
-          className={`overflow-x-auto p-2 sm:p-6 flex justify-center bg-canvas-subtle/40 rounded-3xl border border-surface-border/50 shadow-inner ${
-            isFullScreen ? 'w-full max-w-5xl' : 'w-full'
+          className={`w-full overflow-auto flex justify-center bg-canvas-subtle/40 rounded-2xl border border-surface-border/50 shadow-inner p-3 sm:p-5 ${
+            isFullScreen ? 'max-w-5xl' : ''
           }`}
-          style={{
-            transform: `scale(${zoomLevel / 100})`,
-            transformOrigin: 'top center',
-            transition: 'transform 0.2s ease',
-          }}
+          style={{ maxHeight: 'calc(100vh - 170px)' }}
         >
-            {/* The A4 Resume Document */}
+          <div
+            className="transition-transform duration-200 ease-out origin-top flex justify-center w-full"
+            style={{
+              transform: `scale(${zoomLevel / 100})`,
+              transformOrigin: 'top center',
+              marginBottom: zoomLevel < 100 ? `-${(100 - zoomLevel) * 2.5}mm` : '0',
+            }}
+          >
+            {/* The Resume Document */}
             <div
               ref={printRef}
               id="cv-paper-container"
-              className="w-full max-w-[210mm] min-h-[297mm] shadow-2xl rounded-sm transition-all mx-auto"
+              className="w-full max-w-[195mm] min-h-[235mm] shadow-xl rounded-sm transition-all mx-auto shrink-0"
               style={{
                 backgroundColor: styles.paperBg,
                 color: styles.textColor,
@@ -1485,14 +1607,14 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
               }}
             >
               {/* Header / Personal Details */}
-              <header className="mb-6">
+              <header className="mb-4">
                 <h1
                   className="font-black tracking-tight"
                   style={{
                     color: styles.headerColor,
-                    fontSize: '28px',
+                    fontSize: '22px',
                     lineHeight: '1.2',
-                    marginBottom: '4px',
+                    marginBottom: '3px',
                   }}
                   contentEditable
                   suppressContentEditableWarning
@@ -1505,8 +1627,8 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                   className="font-bold tracking-wide"
                   style={{
                     color: styles.themeColor,
-                    fontSize: '15px',
-                    marginBottom: '10px',
+                    fontSize: '13px',
+                    marginBottom: '6px',
                   }}
                   contentEditable
                   suppressContentEditableWarning
@@ -1517,7 +1639,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
 
                 {/* Contact Links */}
                 <div
-                  className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs"
+                  className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]"
                   style={{ opacity: 0.85 }}
                 >
                   {data.personal.email && <span>{data.personal.email}</span>}
@@ -1743,7 +1865,8 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default CvEditor;
