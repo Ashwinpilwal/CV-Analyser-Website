@@ -1,0 +1,19 @@
+{
+  "name": "auracv-monorepo",
+  "version": "1.0.0",
+  "description": "OK-CV - Modern AI Resume Analyser & ATS Diagnostics (MERN + Tailwind)",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "backend": "npm --prefix backend run dev",
+    "frontend": "npm --prefix frontend run dev"
+  },
+  "keywords": [
+    "mern",
+    "resume-analyser",
+    "ats",
+    "gemini-ai",
+    "tailwind"
+  ],
+  "author": "",
+  "license": "ISC"
+}
