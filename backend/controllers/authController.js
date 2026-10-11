@@ -3,6 +3,17 @@ const User = require('../models/User');
 const memStore = require('../services/storageFallback');
 const { generateToken } = require('../middleware/authMiddleware');
 
+const getCookieOptions = () => {
+  const isProd = process.env.NODE_ENV === 'production';
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax', // 'none' is required for cross-domain cookies (Vercel frontend -> Render backend)
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    path: '/',
+  };
+};
+
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
@@ -56,13 +67,7 @@ const register = async (req, res) => {
     const token = generateToken(user._id);
 
     // Send HTTP-only secure cookie
-    res.cookie('auracv_session', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      path: '/',
-    });
+    res.cookie('auracv_session', token, getCookieOptions());
 
     return res.status(201).json({
       success: true,
@@ -126,13 +131,7 @@ const login = async (req, res) => {
     const token = generateToken(user._id);
 
     // Send HTTP-only secure cookie
-    res.cookie('auracv_session', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      path: '/',
-    });
+    res.cookie('auracv_session', token, getCookieOptions());
 
     return res.status(200).json({
       success: true,
@@ -183,12 +182,7 @@ const getMe = async (req, res) => {
 // @route   POST /api/auth/logout
 // @access  Public
 const logout = async (req, res) => {
-  res.clearCookie('auracv_session', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-  });
+  res.clearCookie('auracv_session', getCookieOptions());
   return res.status(200).json({
     success: true,
     message: 'Logged out successfully.',
@@ -229,13 +223,7 @@ const demoLogin = async (req, res) => {
     const token = generateToken(user._id);
 
     // Send HTTP-only secure cookie
-    res.cookie('auracv_session', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      path: '/',
-    });
+    res.cookie('auracv_session', token, getCookieOptions());
 
     return res.status(200).json({
       success: true,

@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+// Resolve base API URL: use VITE_API_URL in production, fallback to local Vite proxy '/api'
+const rawApiUrl = import.meta.env.VITE_API_URL;
+const baseURL = rawApiUrl
+  ? (rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl.replace(/\/+$/, '')}/api`)
+  : '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   withCredentials: true, // Send and receive HTTP-only session cookies
   headers: {
     'Content-Type': 'application/json',

@@ -15,20 +15,41 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middleware
-const allowedOrigins = [
+const localOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'http://127.0.0.1:5173',
 ];
 
+const configuredClientUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL.trim().replace(/\/+$/, '') : null;
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, true); // Permissive for local development
+      // Allow server-to-server or non-browser requests (like curl, Postman, health probes)
+      if (!origin) return callback(null, true);
+
+      // Allow configured production client URL
+      if (configuredClientUrl && (origin === configuredClientUrl || origin === configuredClientUrl.replace(/\/+$/, ''))) {
+        return callback(null, true);
       }
+
+      // Allow local development origins
+      if (localOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow Vercel preview and production deployments (*.vercel.app)
+      if (/\.vercel\.app$/.test(new URL(origin).hostname)) {
+        return callback(null, true);
+      }
+
+      // If not production, remain permissive for testing
+      if (process.env.NODE_ENV !== 'production') {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
     },
     credentials: true,
   })
