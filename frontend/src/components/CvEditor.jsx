@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
+  ArrowLeft,
   Download,
   Printer,
   Palette,
@@ -95,16 +96,123 @@ const INITIAL_DATA = {
   ],
 };
 
-const COLOR_PRESETS = [
-  { name: 'Teal Emerald', hex: '#0d9488' },
-  { name: 'Electric Cyan', hex: '#0284c7' },
-  { name: 'Royal Indigo', hex: '#4f46e5' },
-  { name: 'Vivid Violet', hex: '#7c3aed' },
-  { name: 'Warm Amber', hex: '#d97706' },
-  { name: 'Crimson Rose', hex: '#e11d48' },
-  { name: 'Classic Slate', hex: '#334155' },
-  { name: 'Pitch Obsidian', hex: '#0f172a' },
+const PALETTE_GRADIENT =
+  'linear-gradient(to right, #0f172a, #1e3a8a, #2563eb, #0284c7, #06b6d4, #0d9488, #10b981, #16a34a, #d97706, #ea580c, #dc2626, #e11d48, #db2777, #9333ea, #7c3aed, #4f46e5, #475569, #0f172a)';
+
+const PALETTE_STOPS = [
+  { r: 15, g: 23, b: 42 },    // #0f172a Obsidian
+  { r: 30, g: 58, b: 138 },   // #1e3a8a Navy
+  { r: 37, g: 99, b: 235 },   // #2563eb Blue
+  { r: 2, g: 132, b: 199 },   // #0284c7 Ocean
+  { r: 6, g: 182, b: 212 },   // #06b6d4 Cyan
+  { r: 13, g: 148, b: 136 },  // #0d9488 Teal
+  { r: 16, g: 185, b: 129 },  // #10b981 Emerald
+  { r: 22, g: 163, b: 74 },   // #16a34a Forest
+  { r: 217, g: 119, b: 6 },   // #d97706 Amber
+  { r: 234, g: 88, b: 12 },   // #ea580c Orange
+  { r: 220, g: 38, b: 38 },   // #dc2626 Red
+  { r: 225, g: 29, b: 72 },   // #e11d48 Rose
+  { r: 219, g: 39, b: 119 },  // #db2777 Magenta
+  { r: 147, g: 51, b: 234 },  // #9333ea Purple
+  { r: 124, g: 58, b: 237 },  // #7c3aed Violet
+  { r: 79, g: 70, b: 229 },   // #4f46e5 Indigo
+  { r: 71, g: 85, b: 105 },   // #475569 Slate
+  { r: 15, g: 23, b: 42 },    // #0f172a
 ];
+
+const getColorAtRatio = (ratio) => {
+  const clamped = Math.max(0, Math.min(1, ratio));
+  const scaled = clamped * (PALETTE_STOPS.length - 1);
+  const index = Math.floor(scaled);
+  const t = scaled - index;
+  const c1 = PALETTE_STOPS[index];
+  const c2 = PALETTE_STOPS[Math.min(PALETTE_STOPS.length - 1, index + 1)];
+  const r = Math.round(c1.r + (c2.r - c1.r) * t);
+  const g = Math.round(c1.g + (c2.g - c1.g) * t);
+  const b = Math.round(c1.b + (c2.b - c1.b) * t);
+  return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
+};
+
+const ColorPalettePicker = ({ value, onChange }) => {
+  const trackRef = useRef(null);
+  const [thumbPercent, setThumbPercent] = useState(33);
+
+  const handlePointer = (clientX) => {
+    if (!trackRef.current) return;
+    const rect = trackRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const ratio = x / rect.width;
+    setThumbPercent(ratio * 100);
+    const hex = getColorAtRatio(ratio);
+    onChange(hex);
+  };
+
+  const onPointerDown = (e) => {
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (_) {}
+    handlePointer(e.clientX);
+  };
+
+  const onPointerMove = (e) => {
+    handlePointer(e.clientX);
+  };
+
+  const onPointerUp = (e) => {
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch (_) {}
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* Interactive Drag & Hover Gradient Bar */}
+      <div
+        ref={trackRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        className="relative h-9 sm:h-10 w-full rounded-2xl cursor-crosshair border border-white/20 shadow-inner select-none touch-none"
+        style={{ background: PALETTE_GRADIENT }}
+        title="Hover or drag across palette to select color"
+      >
+        {/* Thumb indicator */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-6 h-6 rounded-full border-2 border-white shadow-xl pointer-events-none transition-transform scale-110"
+          style={{
+            left: `${thumbPercent}%`,
+            backgroundColor: value,
+          }}
+        />
+      </div>
+
+      {/* Selected Color Readout */}
+      <div className="flex items-center justify-between gap-3 bg-canvas-subtle px-3 py-2.5 rounded-xl border border-surface-border">
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-7 h-7 rounded-lg border border-white/20 shadow-sm shrink-0"
+            style={{ backgroundColor: value }}
+          />
+          <div className="text-left">
+            <span className="text-[11px] text-slate-400 block leading-tight">Selected Accent</span>
+            <span className="text-xs font-mono font-bold text-white uppercase">{value}</span>
+          </div>
+        </div>
+
+        <label className="text-xs font-semibold text-slate-300 hover:text-white px-2.5 py-1 rounded-lg bg-surface hover:bg-surface-elevated border border-surface-border transition-colors cursor-pointer relative overflow-hidden">
+          <span>Custom Hex</span>
+          <input
+            type="color"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            title="Fine-tune with native color picker"
+          />
+        </label>
+      </div>
+    </div>
+  );
+};
 
 const FONT_OPTIONS = [
   { name: 'Plus Jakarta Sans (Modern)', value: "'Plus Jakarta Sans', sans-serif" },
@@ -627,22 +735,24 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Editor Top Navigation Bar */}
-      <div className="bg-surface/90 backdrop-blur-xl border border-cyan-500/25 rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-subtle-card no-print">
+      <div className="bg-surface/90 backdrop-blur-xl border border-surface-border rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-subtle-card no-print">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
               onClick={onBack}
-              className="px-3.5 py-1.5 rounded-xl bg-surface-elevated hover:bg-surface-hover border border-surface-border text-xs sm:text-sm font-bold text-slate-200 transition-colors cursor-pointer"
+              title="Back"
+              aria-label="Back"
+              className="p-2 sm:p-2.5 rounded-xl bg-surface-elevated hover:bg-surface-hover border border-surface-border text-slate-200 hover:text-white transition-colors cursor-pointer flex items-center justify-center shrink-0"
             >
-              ← Back to Report
+              <ArrowLeft className="w-5 h-5" />
             </button>
           )}
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-100 tracking-tight flex items-center gap-2">
               <span>Live CV Studio</span>
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </h2>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-400">
               Customize colors, fonts, margins, content, and export a clean PDF
             </p>
           </div>
@@ -672,21 +782,21 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
           {/* Full Screen View Toggle */}
           <button
             onClick={() => setIsFullScreen((prev) => !prev)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all cursor-pointer shadow-sm ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer shadow-sm ${
               isFullScreen
-                ? 'bg-cyan-500 text-slate-950 font-black'
+                ? 'bg-slate-700 text-white'
                 : 'text-slate-200 hover:text-white bg-surface-elevated hover:bg-surface-hover border border-surface-border'
             }`}
             title={isFullScreen ? 'Exit Full Screen' : 'View Full Screen'}
           >
             {isFullScreen ? (
               <>
-                <Minimize2 className="w-4 h-4 text-slate-950" />
+                <Minimize2 className="w-4 h-4" />
                 <span>Exit Fullscreen</span>
               </>
             ) : (
               <>
-                <Maximize2 className="w-4 h-4 text-cyan-400" />
+                <Maximize2 className="w-4 h-4 text-slate-400" />
                 <span>Full Screen</span>
               </>
             )}
@@ -694,16 +804,16 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
 
           <button
             onClick={handlePrint}
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white bg-surface-elevated hover:bg-surface-hover border border-surface-border rounded-xl transition-all cursor-pointer shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-200 hover:text-white bg-surface-elevated hover:bg-surface-hover border border-surface-border rounded-xl transition-all cursor-pointer shadow-sm"
           >
-            <Printer className="w-4 h-4 text-cyan-400" />
+            <Printer className="w-4 h-4 text-slate-400" />
             <span>Print</span>
           </button>
 
           <button
             onClick={handleDownloadPdf}
             disabled={isExporting}
-            className="flex items-center gap-2 px-5 py-2 text-xs sm:text-sm font-black text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 rounded-xl transition-all shadow-md shadow-teal-500/25 hover:scale-[1.02] cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-2 px-5 py-2 text-xs sm:text-sm font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 rounded-xl transition-all shadow-md shadow-emerald-500/20 hover:scale-[1.01] cursor-pointer disabled:opacity-50"
           >
             <Download className="w-4 h-4 text-slate-950" />
             <span>{isExporting ? 'Generating PDF...' : 'Download PDF'}</span>
@@ -716,77 +826,52 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
         {/* LEFT COLUMN: Controls & Editing Sidebar (Hidden in Full Screen Mode) */}
         {!isFullScreen && (
           <div className="lg:col-span-6 xl:col-span-6 space-y-6 no-print">
-          {/* Main Mode Tabs: Styling, Content, AI Suggestions */}
-          <div className="flex bg-surface rounded-2xl p-2 border border-surface-border gap-1.5 shadow-sm">
+          {/* Main Mode Tabs: Styling, Content, AI Suggestions (Without Icons) */}
+          <div className="flex bg-surface rounded-2xl p-1.5 border border-surface-border gap-1.5 shadow-sm">
             <button
               onClick={() => setActiveTab('style')}
-              className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-center cursor-pointer ${
                 activeTab === 'style'
-                  ? 'bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 text-white border border-cyan-500/40 shadow-sm'
+                  ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Palette className="w-4 h-4 text-cyan-400" />
-              <span>Theme & Style</span>
+              Theme & Style
             </button>
             <button
               onClick={() => setActiveTab('content')}
-              className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-center cursor-pointer ${
                 activeTab === 'content'
-                  ? 'bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 text-white border border-cyan-500/40 shadow-sm'
+                  ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <FileText className="w-4 h-4 text-emerald-400" />
-              <span>Edit Content</span>
+              Edit Content
             </button>
             <button
               onClick={() => setActiveTab('ai_help')}
-              className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-center cursor-pointer ${
                 activeTab === 'ai_help'
-                  ? 'bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 text-white border border-cyan-500/40 shadow-sm'
+                  ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>AI Inserts</span>
+              AI Inserts
             </button>
           </div>
 
           {/* TAB 1: THEME & STYLE CONTROLS */}
           {activeTab === 'style' && (
             <div className="bg-surface/90 border border-surface-border rounded-2xl p-5 sm:p-6 space-y-6 shadow-subtle-card">
-              {/* Primary Accent Color */}
+              {/* Primary Accent Color with Interactive Hover/Drag Spectrum Palette */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2.5">
                   Accent Color
                 </label>
-                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
-                  {COLOR_PRESETS.map((color) => (
-                    <button
-                      key={color.hex}
-                      onClick={() => setStyles((s) => ({ ...s, themeColor: color.hex }))}
-                      className={`h-9 w-full rounded-xl transition-all cursor-pointer relative flex items-center justify-center shadow-sm ${
-                        styles.themeColor === color.hex ? 'ring-2 ring-white scale-105' : 'hover:scale-105'
-                      }`}
-                      style={{ backgroundColor: color.hex }}
-                      title={color.name}
-                    >
-                      {styles.themeColor === color.hex && <Check className="w-4 h-4 text-white drop-shadow" />}
-                    </button>
-                  ))}
-                </div>
-                {/* Custom Hex Color Picker */}
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="text-xs text-slate-400">Custom:</span>
-                  <input
-                    type="color"
-                    value={styles.themeColor}
-                    onChange={(e) => setStyles((s) => ({ ...s, themeColor: e.target.value }))}
-                    className="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-0"
-                  />
-                  <span className="text-xs font-mono text-slate-300 uppercase">{styles.themeColor}</span>
-                </div>
+                <ColorPalettePicker
+                  value={styles.themeColor}
+                  onChange={(newColor) => setStyles((s) => ({ ...s, themeColor: newColor }))}
+                />
               </div>
 
               {/* Typography / Font Family */}
