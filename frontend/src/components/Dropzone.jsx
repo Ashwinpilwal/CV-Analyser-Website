@@ -133,27 +133,24 @@ export const Dropzone = ({ onAnalyze, isAnalyzing }) => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Column: Fold Intro + Interactive Upload Card */}
         <div className="lg:col-span-7 flex flex-col justify-center">
-          {/* Enhancv Category Pill */}
+          {/* Category Pill */}
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+            <span className="text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-slate-800/90 text-slate-300 border border-slate-700/80">
               Resume Checker
             </span>
-            <span className="text-xs font-medium text-slate-400">
-              · Powered by 27 AI Diagnostics
+            <span className="text-xs text-slate-400">
+              · AI Diagnostics
             </span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] mb-4">
-            Is your resume{' '}
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
-              good enough?
-            </span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-100 tracking-tight leading-[1.15] mb-4">
+            Is your resume <span className="text-emerald-400">good enough?</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-normal mb-8 max-w-xl">
-            Audit your resume against 27 ATS parameters. Get instant scoring, keyword alignment, and actionable bullet rewrites.
+          <p className="text-base sm:text-lg text-slate-400 leading-relaxed mb-8 max-w-xl">
+            Audit your resume against core ATS parameters. Get instant scoring, keyword alignment, and actionable bullet rewrites.
           </p>
 
           {/* Upload & Form Workspace Card */}
@@ -364,11 +361,11 @@ export const Dropzone = ({ onAnalyze, isAnalyzing }) => {
                 )}
               </div>
 
-              {/* Big Enhancv CTA Button */}
+              {/* CTA Button */}
               <button
                 type="submit"
                 disabled={isAnalyzing}
-                className="w-full py-3.5 px-6 rounded-2xl text-base font-black text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 transition-all duration-200 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 rounded-2xl text-base font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-md shadow-emerald-500/20 hover:scale-[1.005] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
               >
                 {isAnalyzing ? (
                   <>

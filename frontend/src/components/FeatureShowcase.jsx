@@ -17,7 +17,7 @@ export const FeatureShowcase = () => {
     {
       id: 'tailoring',
       title: 'Job Match & Keywords',
-      badge: 'AI Keywords',
+      badge: 'Keywords',
       icon: Target,
       description: 'Match your experience against job requirements and discover missing skills.',
       src: '/videos/checker_tailoring_4c48d62a7b.mp4',
@@ -33,7 +33,7 @@ export const FeatureShowcase = () => {
     {
       id: 'tutorial',
       title: 'Optimization Guide',
-      badge: 'Impact Formula',
+      badge: 'Impact',
       icon: Sparkles,
       description: 'Turn passive job duties into quantifiable, high-impact achievements.',
       src: '/videos/Resume_Builder_Tutorial_68b11fdab1.mp4',
@@ -70,21 +70,21 @@ export const FeatureShowcase = () => {
       {/* 1. Diagnostic Highlights */}
       <div className="border-y border-surface-border py-7">
         <div className="max-w-4xl mx-auto text-center space-y-1.5 mb-5">
-          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
             How OK-CV Grades Your Resume
           </h3>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
             Simulates commercial ATS platforms and recruiter review in seconds.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
           <div className="bg-surface/80 border border-surface-border rounded-2xl p-3.5 flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 shrink-0">
+            <div className="p-2 rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/80 shrink-0">
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">ATS Score (0–100)</p>
+              <p className="text-xs font-semibold text-slate-200">ATS Score (0–100)</p>
               <p className="text-xs text-slate-400 mt-0.5">
                 Overall score benchmarked across key ATS criteria.
               </p>
@@ -92,11 +92,11 @@ export const FeatureShowcase = () => {
           </div>
 
           <div className="bg-surface/80 border border-surface-border rounded-2xl p-3.5 flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400 shrink-0">
+            <div className="p-2 rounded-xl bg-slate-800 text-amber-400 border border-slate-700/80 shrink-0">
               <AlertTriangle className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Passed vs. Flagged</p>
+              <p className="text-xs font-semibold text-slate-200">Passed vs. Flagged</p>
               <p className="text-xs text-slate-400 mt-0.5">
                 Pinpoints bullets needing stronger metrics.
               </p>
@@ -104,11 +104,11 @@ export const FeatureShowcase = () => {
           </div>
 
           <div className="bg-surface/80 border border-surface-border rounded-2xl p-3.5 flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-cyan-500/15 text-cyan-400 shrink-0">
+            <div className="p-2 rounded-xl bg-slate-800 text-cyan-400 border border-slate-700/80 shrink-0">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Parse Rate & Layout</p>
+              <p className="text-xs font-semibold text-slate-200">Parse Rate & Layout</p>
               <p className="text-xs text-slate-400 mt-0.5">
                 Ensures Greenhouse, Lever, and Workday compatibility.
               </p>
@@ -124,17 +124,17 @@ export const FeatureShowcase = () => {
             <img
               src="/images/ats-checker.svg"
               alt="Two-Tier Evaluation"
-              className="w-full max-w-[340px] h-auto object-contain select-none"
+              className="w-full max-w-[340px] h-auto object-contain select-none opacity-90"
             />
           </div>
         </div>
 
         <div className="lg:col-span-7 space-y-4">
           <div>
-            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 tracking-tight">
               Scored for Both ATS and Recruiters
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
               Screened for automated parsing software and human hiring managers.
             </p>
           </div>
@@ -142,10 +142,10 @@ export const FeatureShowcase = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="bg-surface/90 border border-surface-border rounded-2xl p-4">
               <div className="flex items-center gap-2.5 mb-1.5">
-                <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center shrink-0">
+                <span className="w-6 h-6 rounded-lg bg-slate-800 text-slate-300 font-semibold text-xs flex items-center justify-center border border-slate-700">
                   1
                 </span>
-                <h4 className="text-sm font-bold text-white">Machine Parsability</h4>
+                <h4 className="text-sm font-semibold text-slate-200">Machine Parsability</h4>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Extracts skills, job titles, and dates without layout errors.
@@ -154,10 +154,10 @@ export const FeatureShowcase = () => {
 
             <div className="bg-surface/90 border border-surface-border rounded-2xl p-4">
               <div className="flex items-center gap-2.5 mb-1.5">
-                <span className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center shrink-0">
+                <span className="w-6 h-6 rounded-lg bg-slate-800 text-slate-300 font-semibold text-xs flex items-center justify-center border border-slate-700">
                   2
                 </span>
-                <h4 className="text-sm font-bold text-white">Recruiter Impact</h4>
+                <h4 className="text-sm font-semibold text-slate-200">Recruiter Impact</h4>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Scores measurable impact, active verbs, and flags buzzwords.
@@ -169,7 +169,7 @@ export const FeatureShowcase = () => {
 
       {/* 3. Core Audit Pillars */}
       <div className="max-w-5xl mx-auto">
-        <h3 className="text-xl sm:text-2xl font-black text-white text-center tracking-tight mb-5">
+        <h3 className="text-xl sm:text-2xl font-bold text-slate-100 text-center tracking-tight mb-5">
           What We Check
         </h3>
 
@@ -179,13 +179,13 @@ export const FeatureShowcase = () => {
             return (
               <div
                 key={idx}
-                className="bg-surface/90 border border-surface-border rounded-2xl p-4 hover:border-emerald-500/40 transition-colors flex flex-col justify-start"
+                className="bg-surface/90 border border-surface-border rounded-2xl p-4 hover:border-slate-700 transition-colors flex flex-col justify-start"
               >
                 <div className="flex items-center gap-2.5 mb-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/25 shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-slate-800 text-emerald-400 flex items-center justify-center border border-slate-700/80 shrink-0">
                     <Icon className="w-4 h-4" />
                   </div>
-                  <h4 className="text-sm font-bold text-white tracking-tight">{item.title}</h4>
+                  <h4 className="text-sm font-semibold text-slate-200 tracking-tight">{item.title}</h4>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
               </div>
@@ -197,7 +197,7 @@ export const FeatureShowcase = () => {
       {/* 4. Video Demos */}
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-5">
-          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
             See OK-CV in Action
           </h3>
         </div>
@@ -210,10 +210,10 @@ export const FeatureShowcase = () => {
               <button
                 key={vid.id}
                 onClick={() => setActiveVideoTab(vid.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-emerald-500/20 text-white border border-emerald-500/50'
-                    : 'bg-surface hover:bg-surface-elevated text-slate-400 hover:text-white border border-surface-border'
+                    ? 'bg-slate-800 text-slate-100 border border-slate-700 shadow-sm'
+                    : 'bg-surface hover:bg-surface-elevated text-slate-400 hover:text-slate-200 border border-surface-border'
                 }`}
               >
                 <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
@@ -241,10 +241,10 @@ export const FeatureShowcase = () => {
             </div>
 
             <div className="md:col-span-4 space-y-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/25">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-300 bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-700">
                 {currentVideo.badge}
               </span>
-              <h4 className="text-base font-bold text-white tracking-tight mt-1">
+              <h4 className="text-base font-semibold text-slate-100 tracking-tight mt-1">
                 {currentVideo.title}
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed">

@@ -15,14 +15,14 @@
   }
 
   [data-theme="night"], .night-theme {
-    --canvas-bg: #030508;
-    --canvas-subtle: #070c14;
-    --surface-bg: #0b1220;
-    --surface-elevated: #111a2e;
-    --surface-hover: #192744;
-    --surface-border: rgba(56, 189, 248, 0.22);
-    --border-glow: rgba(52, 211, 153, 0.35);
-    --accent-glow: rgba(52, 211, 153, 0.2);
+    --canvas-bg: #0b0f19;
+    --canvas-subtle: #111726;
+    --surface-bg: #131c2e;
+    --surface-elevated: #18233a;
+    --surface-hover: #1f2d4a;
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(255, 255, 255, 0.04);
+    --accent-glow: rgba(16, 185, 129, 0.06);
   }
 
   * {
@@ -31,7 +31,7 @@
   
   body {
     background-color: var(--canvas-bg);
-    color: #f1f5f9;
+    color: #cbd5e1;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     transition: background-color 0.3s ease, color 0.3s ease;
   }
@@ -88,9 +88,8 @@
   /* Ambient gradient background mesh for Night Mode */
   .bg-mesh-night {
     background-image: 
-      radial-gradient(at 15% 15%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
-      radial-gradient(at 85% 20%, rgba(6, 182, 212, 0.14) 0px, transparent 50%),
-      radial-gradient(at 50% 90%, rgba(20, 184, 166, 0.1) 0px, transparent 50%);
+      radial-gradient(at 20% 15%, rgba(56, 189, 248, 0.03) 0px, transparent 60%),
+      radial-gradient(at 80% 25%, rgba(16, 185, 129, 0.03) 0px, transparent 60%);
   }
 
   /* Ambient gradient background mesh for Day Mode */

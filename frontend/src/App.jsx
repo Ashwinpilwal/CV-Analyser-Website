@@ -136,7 +136,7 @@ const AppContent = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-canvas ${isNight ? 'text-slate-100 bg-mesh-night' : 'text-slate-900 bg-mesh-day'} flex flex-col font-sans relative overflow-x-hidden`}>
+    <div className={`min-h-screen bg-canvas ${isNight ? 'text-slate-200 bg-mesh-night' : 'text-slate-900 bg-mesh-day'} flex flex-col font-sans relative overflow-x-hidden`}>
       {/* Clean Lightweight Radial Glows */}
       <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden" />
 
