@@ -13,12 +13,15 @@ import {
 import { analysisAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from './Toast';
+import { DeleteConfirmModal } from './DeleteConfirmModal';
 
 export const DashboardView = ({ onSelectAnalysis, onStartNew }) => {
   const { user, isAuthenticated, demoLogin } = useAuth();
   const [history, setHistory] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { addToast } = useToast();
 
   const fetchDashboardData = async () => {
@@ -50,19 +53,30 @@ export const DashboardView = ({ onSelectAnalysis, onStartNew }) => {
     fetchDashboardData();
   }, [isAuthenticated]);
 
-  const handleDelete = async (id, e) => {
+  const handleOpenDeleteModal = (item, e) => {
     e.stopPropagation();
-    if (!window.confirm('Are you sure you want to delete this analysis record?')) {
-      return;
-    }
+    setDeleteTarget({
+      id: item._id,
+      name: item.fileName || item.targetRole || 'Analysis Record',
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
     try {
-      const res = await analysisAPI.delete(id);
+      const res = await analysisAPI.delete(deleteTarget.id);
       if (res.data.success) {
-        setHistory((prev) => prev.filter((item) => item._id !== id));
+        setHistory((prev) => prev.filter((item) => item._id !== deleteTarget.id));
         addToast('Analysis record deleted', 'info');
+      } else {
+        addToast(res.data.message || 'Failed to delete record.', 'error');
       }
     } catch (err) {
       addToast('Failed to delete record.', 'error');
+    } finally {
+      setIsDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -301,8 +315,8 @@ export const DashboardView = ({ onSelectAnalysis, onStartNew }) => {
                           <ExternalLink className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={(e) => handleDelete(item._id, e)}
-                          className="p-2 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-surface transition-colors"
+                          onClick={(e) => handleOpenDeleteModal(item, e)}
+                          className="p-2 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-surface transition-colors cursor-pointer"
                           title="Delete Record"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -316,6 +330,17 @@ export const DashboardView = ({ onSelectAnalysis, onStartNew }) => {
           </div>
         )}
       </div>
+
+      {/* Simple Delete Confirmation Popup */}
+      <DeleteConfirmModal
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => !isDeleting && setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Analysis Record"
+        message="Are you sure you want to delete this analysis record? This will permanently remove the record and its stored resume file."
+        itemName={deleteTarget?.name}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 };
