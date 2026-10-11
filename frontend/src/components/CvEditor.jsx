@@ -1602,7 +1602,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          className={`w-full overflow-auto flex justify-center bg-canvas-subtle/40 rounded-2xl border border-surface-border/50 shadow-inner p-2 sm:p-5 touch-pan-x touch-pan-y ${
+          className={`bg-white w-full overflow-auto flex justify-center bg-canvas-subtle/40 rounded-2xl border border-surface-border/50 shadow-inner p-2 sm:p-5 touch-pan-x touch-pan-y ${
             isFullScreen ? 'max-w-5xl' : ''
           }`}
           style={{ maxHeight: 'calc(100vh - 170px)' }}
@@ -1619,7 +1619,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
             <div
               ref={printRef}
               id="cv-paper-container"
-              className="w-full max-w-3xl h-auto shadow-xl rounded-xl transition-all mx-auto"
+              className="w-full max-w-3xl h-auto rounded-xl transition-all mx-auto"
               style={{
                 backgroundColor: styles.paperBg,
                 color: styles.textColor,
