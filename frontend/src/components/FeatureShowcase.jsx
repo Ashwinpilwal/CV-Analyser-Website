@@ -119,33 +119,61 @@ export const FeatureShowcase = () => {
     },
   ];
 
-  const topCompanies = [
-    'Google',
-    'Amazon',
-    'Spotify',
-    'Meta',
-    'Microsoft',
-    'Tesla',
-    'Airbnb',
-    'Stripe',
-  ];
-
   return (
-    <div className="space-y-20 pt-8 pb-12">
-      {/* 1. Trusted by Top Companies Logo Band */}
-      <div className="border-y border-surface-border py-8 text-center">
-        <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-400 mb-6">
-          Trusted by candidates interviewed & hired at top tech employers
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 opacity-70">
-          {topCompanies.map((company) => (
-            <span
-              key={company}
-              className="text-base sm:text-lg font-black tracking-tight text-slate-300 hover:text-white transition-colors"
-            >
-              {company}
-            </span>
-          ))}
+    <div className="space-y-16 pt-6 pb-12">
+      {/* 1. Resume Checker Overview & Diagnostics (Explaining the image above) */}
+      <div className="border-y border-surface-border py-8">
+        <div className="max-w-4xl mx-auto text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Interactive Diagnostic Breakdown</span>
+          </div>
+
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            How OK-CV Grades Your Resume
+          </h2>
+
+          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            The preview above illustrates our real-time audit engine at work—simulating commercial applicant tracking systems before a hiring manager opens your file.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-3 text-left">
+            <div className="bg-surface/80 border border-surface-border rounded-2xl p-4 flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 shrink-0 mt-0.5">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-white">ATS Grader Score (0–100)</p>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  Calculates an overall alignment rating based on 27 ATS parameters and keyword density.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-surface/80 border border-surface-border rounded-2xl p-4 flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400 shrink-0 mt-0.5">
+                <AlertTriangle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-white">Passed vs. Flagged Checks</p>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  Separates verified strengths from items needing optimization like repetition and weak verbs.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-surface/80 border border-surface-border rounded-2xl p-4 flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-cyan-500/15 text-cyan-400 shrink-0 mt-0.5">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-white">Parse Rate & Structure</p>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  Validates section headers, fonts, and dates against Greenhouse, Lever, and Workday systems.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -172,21 +200,14 @@ export const FeatureShowcase = () => {
               <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 inline-block mb-3">
                 Two-Tier Evaluation
               </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] mb-4">
-                OK-CV forms its ATS score with a{' '}
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] mb-3">
+                OK-CV scores resumes with a{' '}
                 <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                   two-tier system
                 </span>
               </h2>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal mb-3">
-                When you’re applying for a job, there’s a high chance your resume will be screened
-                through an applicant tracking system before it finds its way on a recruiter’s screen.
-                ATS helps hiring managers find the right candidates by adding resumes to a database in a
-                searchable format, extracting their content.
-              </p>
-              <p className="text-sm text-slate-400 leading-relaxed font-normal">
-                OK-CV handles both automated parsability and human recruiter scrutiny with a
-                precision dual-tier audit.
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+                Most resumes are screened by an ATS before reaching human recruiters. OK-CV checks both automated machine parsing and recruiter standards.
               </p>
             </div>
 
@@ -198,13 +219,11 @@ export const FeatureShowcase = () => {
                     1
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                    The proportion of content we can interpret
+                    Machine Parsability
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal pl-11">
-                  Similar to an ATS, our engine parses your resume's structure against signals from
-                  Greenhouse, Lever, and Workday. If the checker can parse your skills, experiences, and
-                  sections, company ATS platforms will too.
+                  Tests how cleanly Greenhouse, Lever, and Workday extract your experience, skills, and dates without layout errors.
                 </p>
               </div>
 
@@ -215,13 +234,11 @@ export const FeatureShowcase = () => {
                     2
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                    What the checker identifies for human recruiters
+                    Recruiter Quality Signals
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal pl-11">
-                  Although an ATS doesn’t look for weak phrasing, hiring managers certainly do. We
-                  evaluate quantifiable achievements (Google X-Y-Z formula), active verbs, and eliminate
-                  vague filler claims.
+                  Evaluates quantifiable impact (Google XYZ formula), active verbs, and flags buzzwords or formatting pitfalls.
                 </p>
               </div>
             </div>

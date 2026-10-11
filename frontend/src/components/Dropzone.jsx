@@ -153,9 +153,7 @@ export const Dropzone = ({ onAnalyze, isAnalyzing }) => {
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-normal mb-8 max-w-xl">
-            A free and fast AI resume checker doing 27 crucial checks to ensure your resume’s content,
-            layout and design is technically compatible with applicant tracking systems and gets you
-            interview callbacks.
+            Audit your resume against 27 ATS parameters. Get instant scoring, keyword alignment, and actionable bullet rewrites.
           </p>
 
           {/* Upload & Form Workspace Card */}
