@@ -27,7 +27,7 @@ const ensureCloudinaryConfig = () => {
 ensureCloudinaryConfig();
 
 /**
- * Uploads a file buffer to Cloudinary or returns fallback mock URL
+ * Uploads a file buffer to Cloudinary with proper format detection (PDF / DOCX)
  * @param {Buffer} buffer 
  * @param {string} originalname 
  * @param {string} mimetype 
@@ -36,7 +36,6 @@ ensureCloudinaryConfig();
 const uploadBufferToCloudinary = (buffer, originalname = 'resume.pdf', mimetype = 'application/pdf') => {
   return new Promise((resolve, reject) => {
     if (!ensureCloudinaryConfig()) {
-      // Graceful fallback for local dev without active Cloudinary account
       const safeName = originalname ? originalname.replace(/[^a-zA-Z0-9._-]/g, '_') : 'resume.pdf';
       return resolve({
         url: `https://storage.placeholder-resumes.internal/${Date.now()}_${safeName}`,
@@ -45,6 +44,13 @@ const uploadBufferToCloudinary = (buffer, originalname = 'resume.pdf', mimetype 
       });
     }
 
+    const lowerName = (originalname || '').toLowerCase();
+    const isPdf = lowerName.endsWith('.pdf') || mimetype === 'application/pdf';
+    const isDocx = lowerName.endsWith('.docx') || mimetype.includes('wordprocessingml');
+    const isDoc = lowerName.endsWith('.doc') || mimetype.includes('msword');
+
+    // Extension suffix to preserve file identity
+    const ext = isPdf ? '.pdf' : isDocx ? '.docx' : isDoc ? '.doc' : '';
     const cleanBaseName = (originalname || 'resume')
       .replace(/\.[^/.]+$/, '')
       .replace(/[^a-zA-Z0-9_-]/g, '_');
@@ -62,12 +68,23 @@ const uploadBufferToCloudinary = (buffer, originalname = 'resume.pdf', mimetype 
       }
     }, 7000);
 
+    // PDFs uploaded as 'image' with format 'pdf' get full preview thumbnails & PDF downloads in Cloudinary.
+    // DOCX/DOC are uploaded with .docx/.doc extension in public_id as raw files so they open directly in Word.
+    const uploadOptions = isPdf
+      ? {
+          folder: 'cv_analyser_resumes',
+          resource_type: 'image',
+          format: 'pdf',
+          public_id: `cv_${Date.now()}_${cleanBaseName}`,
+        }
+      : {
+          folder: 'cv_analyser_resumes',
+          resource_type: 'raw',
+          public_id: `cv_${Date.now()}_${cleanBaseName}${ext}`,
+        };
+
     const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder: 'cv_analyser_resumes',
-        resource_type: 'raw',
-        public_id: `cv_${Date.now()}_${cleanBaseName}`,
-      },
+      uploadOptions,
       (error, result) => {
         clearTimeout(timeoutTimer);
         if (hasResolved) return;
@@ -84,6 +101,7 @@ const uploadBufferToCloudinary = (buffer, originalname = 'resume.pdf', mimetype 
         resolve({
           url: result.secure_url,
           publicId: result.public_id,
+          resourceType: result.resource_type || (isPdf ? 'image' : 'raw'),
           simulated: false,
         });
       }
@@ -107,13 +125,20 @@ const deleteFromCloudinary = async (publicId, resourceType = 'raw') => {
   ensureCloudinaryConfig();
 
   try {
+    // Attempt 1: with passed resourceType (default 'raw' or 'image')
     const result = await cloudinary.uploader.destroy(publicId, {
       resource_type: resourceType,
     });
-    return result;
+    if (result && result.result === 'ok') return result;
+
+    // Attempt 2: if not found, try the other resource type ('image' vs 'raw')
+    const alternateType = resourceType === 'raw' ? 'image' : 'raw';
+    const altResult = await cloudinary.uploader.destroy(publicId, {
+      resource_type: alternateType,
+    });
+    return altResult;
   } catch (error) {
     console.error(`Failed to delete asset ${publicId} from Cloudinary:`, error);
-    // Try image resource type as fallback just in case
     try {
       return await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
     } catch (_) {
