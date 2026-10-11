@@ -24,30 +24,33 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none no-print">
+      <div className="fixed bottom-5 right-4 sm:right-6 left-4 sm:left-auto sm:max-w-sm z-[100] flex flex-col gap-2 pointer-events-none no-print">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 rounded-lg border text-sm backdrop-blur-md shadow-elevated-card animate-slide-up transition-all duration-300"
+            className="pointer-events-auto flex items-start justify-between gap-3 px-3.5 py-2.5 rounded-xl border text-sm backdrop-blur-md shadow-xl transition-all duration-300 w-full"
             style={{
-              backgroundColor: 'rgba(19, 25, 35, 0.95)',
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
               borderColor:
                 toast.type === 'success'
-                  ? 'rgba(74, 222, 128, 0.25)'
+                  ? 'rgba(52, 211, 153, 0.3)'
                   : toast.type === 'error'
-                  ? 'rgba(248, 113, 113, 0.25)'
-                  : 'rgba(255, 255, 255, 0.1)',
+                  ? 'rgba(244, 63, 94, 0.3)'
+                  : 'rgba(56, 189, 248, 0.3)',
             }}
           >
-            <div className="flex items-center gap-2.5">
-              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-accent-sage shrink-0" />}
-              {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-accent-rose shrink-0" />}
-              {toast.type === 'info' && <Info className="w-4 h-4 text-accent-cyan shrink-0" />}
-              <span className="text-slate-200 text-xs font-medium leading-relaxed">{toast.message}</span>
+            <div className="flex items-start gap-2.5 min-w-0 flex-1">
+              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />}
+              {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />}
+              {toast.type === 'info' && <Info className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />}
+              <span className="text-slate-200 text-xs font-medium leading-relaxed break-words min-w-0 flex-1">
+                {toast.message}
+              </span>
             </div>
             <button
+              type="button"
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-slate-200 p-0.5 rounded transition-colors"
+              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors shrink-0 mt-0.5 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
