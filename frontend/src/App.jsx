@@ -220,26 +220,19 @@ const AppContent = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-surface-border bg-surface/60 backdrop-blur-md py-8 no-print mt-auto">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400 font-medium">
-          <div className="flex items-center gap-3">
-            <span className="text-white font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">OK-CV · Precision Intelligence</span>
+      <footer className="border-t border-slate-800 bg-slate-900 py-6 no-print mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-200 font-semibold">OK-CV</span>
             <span>·</span>
-            <span>MERN Stack + Tailwind CSS</span>
+            <span>Precision ATS Intelligence</span>
           </div>
-          <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5 text-emerald-300">
-              <Database className="w-4 h-4 text-emerald-400" />
-              <span>MongoDB</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-cyan-300">
-              <Cloud className="w-4 h-4 text-cyan-400" />
-              <span>Cloudinary</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-amber-300">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>Gemini 1.5 Flash</span>
-            </span>
+          <div className="flex items-center gap-4 text-slate-400">
+            <span>MERN Stack</span>
+            <span>·</span>
+            <span>Tailwind CSS</span>
+            <span>·</span>
+            <span>Gemini AI</span>
           </div>
         </div>
       </footer>
