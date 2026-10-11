@@ -569,10 +569,41 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
 
   const [activeTab, setActiveTab] = useState('style'); // 'style', 'content', 'ai_help'
   const [activeContentSection, setActiveContentSection] = useState('personal'); // 'personal', 'summary', 'experience', 'education', 'skills'
-  const [zoomLevel, setZoomLevel] = useState(70);
+  const [zoomLevel, setZoomLevel] = useState(100);
   const [showAdvancedStyles, setShowAdvancedStyles] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  // Pinch-to-zoom touch gesture handlers for mobile
+  const touchStartDistRef = useRef(null);
+  const touchStartZoomRef = useRef(100);
+
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const dist = Math.hypot(touch1.clientX - touch2.clientX, touch1.clientY - touch2.clientY);
+      touchStartDistRef.current = dist;
+      touchStartZoomRef.current = zoomLevel;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches && e.touches.length === 2 && touchStartDistRef.current) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const dist = Math.hypot(touch1.clientX - touch2.clientX, touch1.clientY - touch2.clientY);
+      const ratio = dist / touchStartDistRef.current;
+      const newZoom = Math.round(Math.min(180, Math.max(50, touchStartZoomRef.current * ratio)));
+      setZoomLevel(newZoom);
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!e.touches || e.touches.length < 2) {
+      touchStartDistRef.current = null;
+    }
+  };
 
   // Sync data whenever initialAnalysisData updates
   useEffect(() => {
@@ -772,16 +803,16 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
           {/* Zoom Controls */}
           <div className="hidden sm:flex items-center bg-canvas-subtle rounded-xl border border-surface-border p-1 text-xs font-bold text-slate-300">
             <button
-              onClick={() => setZoomLevel((z) => Math.max(70, z - 10))}
-              className="p-1 hover:text-white rounded"
+              onClick={() => setZoomLevel((z) => Math.max(50, z - 10))}
+              className="p-1 hover:text-white rounded cursor-pointer"
               title="Zoom Out"
             >
               <ZoomOut className="w-4 h-4" />
             </button>
             <span className="px-2">{zoomLevel}%</span>
             <button
-              onClick={() => setZoomLevel((z) => Math.min(130, z + 10))}
-              className="p-1 hover:text-white rounded"
+              onClick={() => setZoomLevel((z) => Math.min(180, z + 10))}
+              className="p-1 hover:text-white rounded cursor-pointer"
               title="Zoom In"
             >
               <ZoomIn className="w-4 h-4" />
@@ -1511,16 +1542,15 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
             <span className="text-slate-400 font-medium text-[11px]">Zoom:</span>
             <div className="flex items-center gap-1 bg-canvas-subtle p-0.5 rounded-lg border border-surface-border">
               {[
-                { label: '50%', val: 50 },
-                { label: '70% Fit', val: 70 },
-                { label: '85%', val: 85 },
-                { label: '100%', val: 100 },
+                { label: '75%', val: 75 },
+                { label: 'Fit Width (100%)', val: 100 },
+                { label: '125%', val: 125 },
               ].map((preset) => (
                 <button
                   key={preset.val}
                   type="button"
                   onClick={() => setZoomLevel(preset.val)}
-                  className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all cursor-pointer ${
+                  className={`px-2.5 py-0.5 rounded text-[11px] font-semibold transition-all cursor-pointer ${
                     zoomLevel === preset.val
                       ? 'bg-slate-700 text-white shadow-xs'
                       : 'text-slate-400 hover:text-slate-200'
@@ -1530,12 +1560,15 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
                 </button>
               ))}
             </div>
+            <span className="hidden sm:inline-block text-[10px] text-slate-400 ml-1">
+              (Pinch with 2 fingers on mobile)
+            </span>
           </div>
 
           <div className="flex items-center gap-1.5">
             <button
               type="button"
-              onClick={() => setZoomLevel((z) => Math.max(40, z - 10))}
+              onClick={() => setZoomLevel((z) => Math.max(50, z - 10))}
               className="p-1 text-slate-400 hover:text-white hover:bg-surface-elevated rounded transition-colors cursor-pointer"
               title="Zoom Out"
             >
@@ -1544,7 +1577,7 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
             <span className="font-semibold text-slate-300 w-9 text-center text-xs">{zoomLevel}%</span>
             <button
               type="button"
-              onClick={() => setZoomLevel((z) => Math.min(130, z + 10))}
+              onClick={() => setZoomLevel((z) => Math.min(180, z + 10))}
               className="p-1 text-slate-400 hover:text-white hover:bg-surface-elevated rounded transition-colors cursor-pointer"
               title="Zoom In"
             >
@@ -1563,26 +1596,29 @@ export const CvEditor = ({ initialAnalysisData, onBack }) => {
           </div>
         </div>
 
-        {/* Outer Container (Document Frame) */}
+        {/* Outer Container (Document Frame) with Two-Finger Touch Pinch Zoom */}
         <div
-          className={`w-full overflow-auto flex justify-center bg-canvas-subtle/40 rounded-2xl border border-surface-border/50 shadow-inner p-3 sm:p-5 ${
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className={`w-full overflow-auto flex justify-center bg-canvas-subtle/40 rounded-2xl border border-surface-border/50 shadow-inner p-2 sm:p-5 touch-pan-x touch-pan-y ${
             isFullScreen ? 'max-w-5xl' : ''
           }`}
           style={{ maxHeight: 'calc(100vh - 170px)' }}
         >
           <div
-            className="transition-transform duration-200 ease-out origin-top flex justify-center w-full"
+            className="transition-transform duration-150 ease-out origin-top flex justify-center w-full"
             style={{
               transform: `scale(${zoomLevel / 100})`,
               transformOrigin: 'top center',
-              marginBottom: zoomLevel < 100 ? `-${(100 - zoomLevel) * 2.5}mm` : '0',
+              width: zoomLevel > 100 ? `${zoomLevel}%` : '100%',
             }}
           >
-            {/* The Resume Document */}
+            {/* The Resume Document - Wide to cover box, flexible height */}
             <div
               ref={printRef}
               id="cv-paper-container"
-              className="w-full max-w-[195mm] min-h-[235mm] shadow-xl rounded-sm transition-all mx-auto shrink-0"
+              className="w-full max-w-3xl h-auto shadow-xl rounded-xl transition-all mx-auto"
               style={{
                 backgroundColor: styles.paperBg,
                 color: styles.textColor,
