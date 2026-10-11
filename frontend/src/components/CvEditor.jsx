@@ -187,28 +187,15 @@ const ColorPalettePicker = ({ value, onChange }) => {
       </div>
 
       {/* Selected Color Readout */}
-      <div className="flex items-center justify-between gap-3 bg-canvas-subtle px-3 py-2.5 rounded-xl border border-surface-border">
+      <div className="flex items-center justify-between gap-3 bg-canvas-subtle px-3 py-2 rounded-xl border border-surface-border">
         <div className="flex items-center gap-2.5">
           <div
-            className="w-7 h-7 rounded-lg border border-white/20 shadow-sm shrink-0"
+            className="w-5 h-5 rounded-md border border-white/20 shadow-sm shrink-0"
             style={{ backgroundColor: value }}
           />
-          <div className="text-left">
-            <span className="text-[11px] text-slate-400 block leading-tight">Selected Accent</span>
-            <span className="text-xs font-mono font-bold text-white uppercase">{value}</span>
-          </div>
+          <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">{value}</span>
         </div>
-
-        <label className="text-xs font-semibold text-slate-300 hover:text-white px-2.5 py-1 rounded-lg bg-surface hover:bg-surface-elevated border border-surface-border transition-colors cursor-pointer relative overflow-hidden">
-          <span>Custom Hex</span>
-          <input
-            type="color"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-            title="Fine-tune with native color picker"
-          />
-        </label>
+        <span className="text-[11px] text-slate-400">Drag or hover slider to adjust</span>
       </div>
     </div>
   );
