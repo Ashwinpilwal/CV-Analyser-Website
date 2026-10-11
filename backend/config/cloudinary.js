@@ -49,6 +49,19 @@ const uploadBufferToCloudinary = (buffer, originalname = 'resume.pdf', mimetype 
       .replace(/\.[^/.]+$/, '')
       .replace(/[^a-zA-Z0-9_-]/g, '_');
 
+    let hasResolved = false;
+    const timeoutTimer = setTimeout(() => {
+      if (!hasResolved) {
+        hasResolved = true;
+        console.warn('Cloudinary upload timed out after 7s. Proceeding with local fallback URL.');
+        resolve({
+          url: `https://storage.placeholder-resumes.internal/${Date.now()}_${originalname}`,
+          publicId: `fallback_${Date.now()}`,
+          simulated: true,
+        });
+      }
+    }, 7000);
+
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: 'cv_analyser_resumes',
@@ -56,9 +69,12 @@ const uploadBufferToCloudinary = (buffer, originalname = 'resume.pdf', mimetype 
         public_id: `cv_${Date.now()}_${cleanBaseName}`,
       },
       (error, result) => {
+        clearTimeout(timeoutTimer);
+        if (hasResolved) return;
+        hasResolved = true;
+
         if (error) {
           console.error('Cloudinary upload error:', error);
-          // Return simulated fallback instead of failing the user experience
           return resolve({
             url: `https://storage.placeholder-resumes.internal/${Date.now()}_${originalname}`,
             publicId: `fallback_${Date.now()}`,

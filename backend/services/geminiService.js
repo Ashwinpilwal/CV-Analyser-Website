@@ -380,7 +380,15 @@ Ensure output is ONLY raw JSON.
             temperature: 0.1,
           },
         });
-        const result = await model.generateContent(prompt);
+
+        // Strict 8-second timeout race per model candidate so requests never hang
+        const result = await Promise.race([
+          model.generateContent(prompt),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error(`Timeout after 8s for ${mName}`)), 8000)
+          ),
+        ]);
+
         const responseText = result.response.text();
         const parsedData = JSON.parse(responseText);
         parsedData.aiModelUsed = mName;
